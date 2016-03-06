@@ -32,7 +32,7 @@ describe("About Applying What We Have Learnt", function() {
         }
     }
 
-    expect(productsICanEat.length).toBe(FILL_ME_IN);
+    expect(productsICanEat.length).toBe(1);
   });
 
   it("given I'm allergic to nuts and hate mushrooms, it should find a pizza I can eat (functional)", function () {
@@ -40,8 +40,21 @@ describe("About Applying What We Have Learnt", function() {
       var productsICanEat = [];
 
       /* solve using filter() & all() / any() */
+      function isNotMushrooms(ingredient) {
+        return ingredient != "mushrooms";
+      }
 
-      expect(productsICanEat.length).toBe(FILL_ME_IN);
+      productsICanEat = _(products).filter(function (product) {
+        if (product.containsNuts === true) {
+          return false;
+        } else if (_(product.ingredients).all(isNotMushrooms)) {
+          return true;
+        } else {
+          return false;
+        }  
+      });
+
+      expect(productsICanEat.length).toBe(1);
   });
 
   /*********************************************************************************/
@@ -55,14 +68,17 @@ describe("About Applying What We Have Learnt", function() {
       }
     }
 
-    expect(sum).toBe(FILL_ME_IN);
+    expect(sum).toBe(233168);
   });
 
   it("should add all the natural numbers below 1000 that are multiples of 3 or 5 (functional)", function () {
 
-    var sum = FILL_ME_IN;    /* try chaining range() and reduce() */
+    var sum = _(_.range(1000)).chain()   /* try chaining range() and reduce() */
+                              .filter(function(current) { return current  % 3 == 0 || current % 5 == 0; })
+                              .reduce(function(sum, current) { return current + sum; })
+                              .value()
 
-    expect(233168).toBe(FILL_ME_IN);
+    expect(233168).toBe(sum);
   });
 
   /*********************************************************************************/
@@ -75,7 +91,7 @@ describe("About Applying What We Have Learnt", function() {
         }
     }
 
-    expect(ingredientCount['mushrooms']).toBe(FILL_ME_IN);
+    expect(ingredientCount['mushrooms']).toBe(2);
   });
 
   it("should count the ingredient occurrence (functional)", function () {
@@ -83,14 +99,60 @@ describe("About Applying What We Have Learnt", function() {
 
     /* chain() together map(), flatten() and reduce() */
 
-    expect(ingredientCount['mushrooms']).toBe(FILL_ME_IN);
+    ingredientCount = _(products).chain()
+                                 .map(function(currentProduct) { return currentProduct.ingredients; })
+                                 .flatten()
+                                 .reduce(function(ingredientCount, currentIngredient) {
+                                              if (!ingredientCount[currentIngredient]) {
+                                                  ingredientCount[currentIngredient] = 1;
+                                              } else {
+                                                  ingredientCount[currentIngredient]++;
+                                              }
+                                              return ingredientCount;
+                                 }, {})
+                                 .value();
+
+    expect(ingredientCount['mushrooms']).toBe(2);
   });
 
   /*********************************************************************************/
   /* UNCOMMENT FOR EXTRA CREDIT */
-  /*
+ /* 
   it("should find the largest prime factor of a composite number", function () {
+function isPrime(number) {
+	if (number % 2 == 0) {
+		return false;
+	}
+	for (var i = 3; i < number; i+=2) {
+		if (number % i == 0) {
+			return false;
+		}
+	}
+	return true;
+}
 
+
+function primeFactor(number) {
+	if (number < 0) {
+		console.log("enter a positive number");
+		return;
+	}
+	var i = 2;
+	var currentFactor = 0;
+	while (number != i) {
+		if (number % i == 0 && isPrime(i)) {
+			currentFactor = i;
+			i++
+		} else {
+			i++;
+		}
+	}
+	if (currentFactor) {
+		return currentFactor;
+	} else {
+		return number + " is prime number";
+	}
+}
   });
 
   it("should find the largest palindrome made from the product of two 3 digit numbers", function () {
@@ -109,5 +171,5 @@ describe("About Applying What We Have Learnt", function() {
   it("should find the 10001st prime", function () {
 
   });
-  */
+*/
 });
